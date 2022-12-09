@@ -77,5 +77,21 @@ module.exports = {
         };
     },
 
-    
+    addInput: async (req, res) => {
+        try {
+            const newInput = await Idea.findOneAndUpdate(
+                { _id: req.params.ideaId },
+                { $addToSet: { inputs: req.body } },
+                { new: ture },
+            );
+            if (!newInput) {
+                res.status(404).json({ message: 'User was not found with that ID'});
+            } else {
+                res.json('New Input added');
+            };
+        } catch (err) {
+            console.log('Error', err);
+            res.status(500).json(err);
+        };
+    },
 }
