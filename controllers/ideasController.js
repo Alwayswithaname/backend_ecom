@@ -43,4 +43,24 @@ module.exports = {
             res.status(500).json(err);
         };
     },
+
+    updateIdea: async (req, res) => {
+        try {
+            const update = await Idea.findOneAndUpdate(
+                { _id: req.parms.ideaId },
+                { $set: req.body },
+                { runValidators: true, new: true},
+            );
+        if (!update) {
+            res.status(404).json({ message: 'Idea was not found with that ID' });
+        } else {
+            res.json(update);
+        };
+        } catch (err) {
+            console.log('Error', err);
+            res.status(500).json(err);
+        };
+    },
+
+    
 }
