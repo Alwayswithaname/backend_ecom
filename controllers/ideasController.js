@@ -24,4 +24,23 @@ module.exports = {
             res.json(err);
         };
     },
+
+    creatIdea: async (req, res) => {
+        try {
+            const newIdea = await Idea.creat(req.body);
+            const addToUser = await User.findOneAndUpdate(
+                {username: req.body.username },
+                { $addToSet: { Idea: newIdea._id } },
+                { new: true },
+            );
+            if (!addToUser) {
+                res.status(404).json({message: 'Idea was made but couldnt find User'});
+            } else {
+                res.json('Creaded Idea');
+            };
+        } catch (err) {
+            console.log('Error', err);
+            res.status(500).json(err);
+        };
+    },
 }

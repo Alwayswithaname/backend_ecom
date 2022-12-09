@@ -31,7 +31,7 @@ module.exports = {
         } catch (err) {
             console.log('Error', err);
             res.status(500).json(err);
-        }''
+        };
     },
     updateUser: async (req, res) => {
         try {
