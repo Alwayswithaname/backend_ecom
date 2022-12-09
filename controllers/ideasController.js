@@ -94,4 +94,22 @@ module.exports = {
             res.status(500).json(err);
         };
     },
+
+    deleteInput: async (req, res) => {
+        try{
+            const idea = await Idea.findOneAndUpdate(
+                {_id: req.params.ideaId },
+                {$pull: { inputs: { inputsId: req.params.inputId } } },
+                { runValidators: true, new: true},
+            );
+            if (!idea) {
+                res.status(404).json({ message: 'User was not found'});
+            } else {
+                res.json({ message: 'Input was delete'});
+            };
+        } catch (err) {
+            console.log('Error', err);
+            res.json(err);
+        };
+    },
 }
