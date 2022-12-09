@@ -14,7 +14,7 @@ module.exports = {
         try {
             const user = await User.findOne({ _id: req.parms.userId});
             if (!user) {
-                res.status(404).json({ message: 'User not found'});
+                res.status(404).json({ message: 'User was not found with that ID'});
             } else {
                 res.json(user);
             }
@@ -41,7 +41,7 @@ module.exports = {
                 { runValidators: true, new: true},
             );
         if (!update) {
-            res.status(404).json({ message: 'User was not found' });
+            res.status(404).json({ message: 'User was not found with that ID' });
         } else {
             res.json(update);
         };
@@ -61,7 +61,7 @@ module.exports = {
             });
 
             if (!user) {
-                res.status(404).json({ message: 'User was not found'});
+                res.status(404).json({ message: 'User was not found with that ID'});
             } else {
                 await user.deleteOne();
                 res.json({message: "User deleted"});
@@ -72,5 +72,38 @@ module.exports = {
         };
     },
 
-    
-}
+    addFriend: async (req, res) => {
+        try {
+            const newFriend = await User.findOneAndUpdate(
+                {username: req.body.usaername},
+                { $addToSet: { friends: req.params.friendId } },
+                { new: ture },
+            );
+            if (!newFriend) {
+                res.status(404).json({ message: 'User was not found with that ID'});
+            } else {
+                res.json('New friend added');
+            };
+        } catch (err) {
+            console.log('Error', err);
+            res.status(500).json(err);
+        };
+    },
+
+    deleteFriend: async (req, res) => {
+        try{
+            const user = await User.findOneAndUpdate(
+                {username: req.body.username },
+                {$pull: { friends: req.params.friendId } },
+            );
+            if (!user) {
+                res.status(404).json({ message: 'User was not found'});
+            } else {
+                res.json({ message: 'friedn was delete'});
+            };
+        } catch (err) {
+            console.log('Error', err);
+            res.json(err);
+        };
+    },
+};
