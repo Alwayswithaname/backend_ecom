@@ -51,5 +51,26 @@ module.exports = {
         };
     },
 
+    deleteUser: async (req, res) => {
+        try {
+            const user = await User.findById(req.params.userId).clone();
+            const deleteUserIdeas = Idea.deleteMany({
+                "_id": {
+                    $in: user.ideas,
+                },
+            });
+
+            if (!user) {
+                res.status(404).json({ message: 'User was not found'});
+            } else {
+                await user.deleteOne();
+                res.json({message: "User deleted"});
+            };
+        } catch (err) {
+            console.log('Error', err);
+            res.json(err);
+        };
+    },
+
     
 }
