@@ -62,5 +62,20 @@ module.exports = {
         };
     },
 
+    deleteIdea: async (req, res) => {
+        try {
+            const idea = await Idea.findOneAndDelete({ _id: req.parms.ideaId });
+            if (!idea) {
+                res.status(404).json({ message: 'Idea was not found with that ID'});
+            } else {
+                await idea.deleteOne();
+                res.json({message: "Idea deleted"});
+            };
+        } catch (err) {
+            console.log('Error', err);
+            res.json(err);
+        };
+    },
+
     
 }
