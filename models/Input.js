@@ -1,4 +1,4 @@
-const { Schema, types, Types } = require('mongoose');
+const { Schema, Types } = require('mongoose');
 
 const inputSchema = new Schema(
     {
@@ -19,7 +19,7 @@ const inputSchema = new Schema(
             type: Date,
             default: Date.now,
             get: (date) => {
-                if (date) return `${date.toLocalDateString('en-us', { month: 'short'})} ${formatDay(date.getDate())}, ${date.getFullYear()} at ${date.roLocaleTimeString('en-us',)}`
+                if (date) return `${date.toLocaleDateString('en-us', { month: 'short'})} ${formatDay(date.getDate())}, ${date.getFullYear()} at ${date.toLocaleTimeString('en-us',)}`
             },
         },
     },
@@ -41,4 +41,6 @@ const formatDay = (day) => {
     };
 };
 
-module.exports =  inputSchema;
+
+
+module.exports = inputSchema;

@@ -13,7 +13,7 @@ const ideaSchema = new Schema(
             type: Date,
             default: Date.now,
             get: (date) => {
-                if (date) return `${date.toLocalDateString('en-us', { month: 'short'})} ${formatDay(date.getDate())}, ${date.getFullYear()} at ${date.roLocaleTimeString('en-us',)}`
+                if (date) return `${date.toLocaleDateString('en-us', { month: 'short'})} ${formatDay(date.getDate())}, ${date.getFullYear()} at ${date.toLocaleTimeString('en-us',)}`
             },
         },
         username: {
@@ -41,11 +41,13 @@ const formatDay = (day) => {
     };
 };
 
-ideaSchema.virtual('inputCount')
+ideaSchema
+    .virtual('inputCount')
     .get(function () {
         return this.Inputs.length;
     });
 
+
 const Idea = model('idea', ideaSchema);
 
-model.exports = Idea;
+module.exports = Idea;

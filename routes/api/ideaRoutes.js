@@ -1,7 +1,7 @@
 const router = require('express').Router();
-const { getIdeas, getSoloIdea, creatIdea, updateIdea, deleteIdea, addInput, deleteInput } = require('../../controllers/ideaController');
+const { getIdeas, getSoloIdea, createIdea, updateIdea, deleteIdea, addInput, deleteInput } = require('../../controllers/ideasController');
 
-router.route('/').get(getIdeas).all(creatIdea);
+router.route('/').get(getIdeas).all(createIdea);
 
 
 router.route('/:ideaId')

@@ -1,7 +1,7 @@
 const { User, Idea } = require('../models');
 
 module.exports = {
-    getUser: async (req, res) => {
+    getUsers: async (req, res) => {
         try {
             const users = await User.find();
             res.json(users);
@@ -12,11 +12,13 @@ module.exports = {
     },
     getSoloUser: async (req, res) => {
         try {
-            const user = await User.findOne({ _id: req.parms.userId});
+            const user = await User.findOne({ _id: req.params.userId });
             if (!user) {
                 res.status(404).json({ message: 'User was not found with that ID'});
             } else {
+                
                 res.json(user);
+
             }
         } catch (err) {
             console.log('Error', err);
@@ -24,19 +26,20 @@ module.exports = {
         };
     },
 
-    creatUser: async (req, res) => {
+    createUser: async (req, res) => {
         try {
-            const newUser = await User.creat(req.body);
+            const newUser = await User.create(req.body);
             res.json(newUser);
         } catch (err) {
             console.log('Error', err);
             res.status(500).json(err);
         };
     },
+
     updateUser: async (req, res) => {
         try {
             const update = await User.findOneAndUpdate(
-                { _id: req.parms.userId },
+                { _id: req.params.userId },
                 { $set: req.body },
                 { runValidators: true, new: true},
             );
@@ -75,9 +78,9 @@ module.exports = {
     addFriend: async (req, res) => {
         try {
             const newFriend = await User.findOneAndUpdate(
-                {username: req.body.usaername},
+                { username: req.body.username },
                 { $addToSet: { friends: req.params.friendId } },
-                { new: ture },
+                { new: true },
             );
             if (!newFriend) {
                 res.status(404).json({ message: 'User was not found with that ID'});

@@ -1,7 +1,7 @@
-const { User, Idea, Input} = require('../models');
+const { User, Idea, Inputs} = require('../models');
 
 module.exports = {
-    getIdea: async (req, res) => {
+    getIdeas: async (req, res) => {
         try {
             const ideas = await Idea.find();
             res.json(ideas);
@@ -11,9 +11,9 @@ module.exports = {
         }
     },
 
-    getSoloUser: async (req, res) => {
+    getSoloIdea: async (req, res) => {
         try {
-            const idea = await Idea.findOne({ _id: req.parms.ideaId});
+            const idea = await Idea.findOne({ _id: req.params.ideaId});
             if (!idea) {
                 res.status(404).json({ message: 'Idea was not found with that ID'});
             } else {
@@ -25,18 +25,18 @@ module.exports = {
         };
     },
 
-    creatIdea: async (req, res) => {
+    createIdea: async (req, res) => {
         try {
-            const newIdea = await Idea.creat(req.body);
+            const newIdea = await Idea.create(req.body);
             const addToUser = await User.findOneAndUpdate(
                 {username: req.body.username },
-                { $addToSet: { Idea: newIdea._id } },
+                { $addToSet: { ideas: newIdea._id } },
                 { new: true },
             );
             if (!addToUser) {
                 res.status(404).json({message: 'Idea was made but couldnt find User'});
             } else {
-                res.json('Creaded Idea');
+                res.json('Created Idea');
             };
         } catch (err) {
             console.log('Error', err);
@@ -47,7 +47,7 @@ module.exports = {
     updateIdea: async (req, res) => {
         try {
             const update = await Idea.findOneAndUpdate(
-                { _id: req.parms.ideaId },
+                { _id: req.params.ideaId },
                 { $set: req.body },
                 { runValidators: true, new: true},
             );
@@ -64,7 +64,7 @@ module.exports = {
 
     deleteIdea: async (req, res) => {
         try {
-            const idea = await Idea.findOneAndDelete({ _id: req.parms.ideaId });
+            const idea = await Idea.findOneAndDelete({ _id: req.params.ideaId });
             if (!idea) {
                 res.status(404).json({ message: 'Idea was not found with that ID'});
             } else {
@@ -81,8 +81,8 @@ module.exports = {
         try {
             const newInput = await Idea.findOneAndUpdate(
                 { _id: req.params.ideaId },
-                { $addToSet: { inputs: req.body } },
-                { new: ture },
+                { $addToSet: { Inputs: req.body } },
+                { new: true },
             );
             if (!newInput) {
                 res.status(404).json({ message: 'User was not found with that ID'});
@@ -99,13 +99,14 @@ module.exports = {
         try{
             const idea = await Idea.findOneAndUpdate(
                 {_id: req.params.ideaId },
-                {$pull: { inputs: { inputsId: req.params.inputId } } },
+                {$pull: { Inputs: { inputId: req.params.inputId } } },
                 { runValidators: true, new: true},
             );
             if (!idea) {
                 res.status(404).json({ message: 'User was not found'});
             } else {
-                res.json({ message: 'Input was delete'});
+                
+                res.json({ message: 'Input was deleted'});
             };
         } catch (err) {
             console.log('Error', err);
@@ -113,3 +114,4 @@ module.exports = {
         };
     },
 }
+
